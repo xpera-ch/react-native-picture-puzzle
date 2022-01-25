@@ -97,10 +97,10 @@ export default function PicturePuzzle({
     const right = i + 1;
     const top = i - piecesPerRow;
     return [
-      pieces[bottom] === hidden && MoveDirection.BOTTOM,
-      pieces[left] === hidden && MoveDirection.LEFT,
-      pieces[right] === hidden && MoveDirection.RIGHT,
-      pieces[top] === hidden && MoveDirection.TOP,
+      true && MoveDirection.BOTTOM,
+      true && MoveDirection.LEFT,
+      true && MoveDirection.RIGHT,
+      true && MoveDirection.TOP,
     ].filter(e => !!e) as readonly MoveDirection[];
   }, [pieces, piecesPerRow, hidden]);
 
