@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 
 import ObscureView from './ObscureView';
-import { PuzzlePieces, MoveDirection } from '../types';
+import { PuzzlePieces } from '../types';
 import { throwOnInvalidPuzzlePieces } from '../constants';
 
 // Used to describe animations using the length of the row as a metric.
@@ -90,20 +90,6 @@ export default function PicturePuzzle({
     return { x, y };
   }, [pieces, piecesPerRow]);
 
-  const getMoveDirections = React.useCallback((pieceNumber: number): readonly MoveDirection[] => {
-    const i = pieces.indexOf(pieceNumber);
-    const bottom = i + piecesPerRow;
-    const left = i - 1;
-    const right = i + 1;
-    const top = i - piecesPerRow;
-    return [
-      pieces[bottom] === hidden && MoveDirection.BOTTOM,
-      pieces[left] === hidden && MoveDirection.LEFT,
-      pieces[right] === hidden && MoveDirection.RIGHT,
-      pieces[top] === hidden && MoveDirection.TOP,
-    ].filter(e => !!e) as readonly MoveDirection[];
-  }, [pieces, piecesPerRow, hidden]);
-
   React.useEffect(() => {
     Animated.parallel(consecutivePieceTranslations.map(
       (consecutivePieceTranslation, i) => Animated.spring(
@@ -158,43 +144,14 @@ export default function PicturePuzzle({
     }).start();
   }, [animLoadOpacity, loaded]);
 
-  const getNextPieceIndex = React.useCallback((pieceNumber: number, direction: MoveDirection): number => {
-    const idx = pieces.indexOf(pieceNumber);
-    if (direction === MoveDirection.LEFT) {
-      return idx - 1;
-    } else if (direction === MoveDirection.RIGHT) {
-      return idx + 1;
-    } else if (direction === MoveDirection.TOP) {
-      return idx - piecesPerRow;
-    } else if (direction === MoveDirection.BOTTOM) {
-      return idx + piecesPerRow;
-    }
-    return idx;
-  }, [pieces, piecesPerRow]);
-
   const movePiece = React.useCallback((pieceNumber: number, hidden: number) => {
     const idx = pieces.indexOf(pieceNumber);
     const idxHidden = pieces.indexOf(hidden);
     const nextPieces = [...pieces];
       nextPieces[idx] = hidden;
       nextPieces[idxHidden] = pieceNumber;
-      typeof onChange === 'function' && onChange(nextPieces, nextPieces[idx]);
-  }, [pieces, onChange, hidden])
-
-  const shouldMovePiece = React.useCallback((pieceNumber: number) => {
-    const maybeDirections = getMoveDirections(pieceNumber);
-    console.log('maybeDirections: ', maybeDirections)
-    if (maybeDirections.length) {
-      const [direction] = maybeDirections;
-      const idx = pieces.indexOf(pieceNumber);
-      const nextPieceIndex = getNextPieceIndex(pieceNumber, direction);
-      // Update callback array.
-      const nextPieces = [...pieces];
-      nextPieces[idx] = nextPieces[nextPieceIndex];
-      nextPieces[nextPieceIndex] = pieceNumber;
-      typeof onChange === 'function' && onChange(nextPieces, nextPieces[idx]);
-    }
-  }, [getMoveDirections, pieces, onChange, hidden, getNextPieceIndex]);
+      typeof onChange === 'function' && onChange(nextPieces, idx);
+  }, [pieces, hidden])
 
   const actualSize = pieceSize * piecesPerRow;
 

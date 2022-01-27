@@ -11,8 +11,6 @@ var _reactNative = require("react-native");
 
 var _ObscureView = _interopRequireDefault(require("./ObscureView"));
 
-var _types = require("../types");
-
 var _constants = require("../constants");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
@@ -123,16 +121,6 @@ function PicturePuzzle(_ref) {
       y: y
     };
   }, [pieces, piecesPerRow]);
-  var getMoveDirections = React.useCallback(function (pieceNumber) {
-    var i = pieces.indexOf(pieceNumber);
-    var bottom = i + piecesPerRow;
-    var left = i - 1;
-    var right = i + 1;
-    var top = i - piecesPerRow;
-    return [pieces[bottom] === hidden && _types.MoveDirection.BOTTOM, pieces[left] === hidden && _types.MoveDirection.LEFT, pieces[right] === hidden && _types.MoveDirection.RIGHT, pieces[top] === hidden && _types.MoveDirection.TOP].filter(function (e) {
-      return !!e;
-    });
-  }, [pieces, piecesPerRow, hidden]);
   React.useEffect(function () {
     _reactNative.Animated.parallel(consecutivePieceTranslations.map(function (consecutivePieceTranslation, i) {
       return _reactNative.Animated.spring(consecutivePieceTranslation, {
@@ -177,21 +165,6 @@ function PicturePuzzle(_ref) {
       duration: piecesPerRow / BASELINE_ROW_LENGTH * 250
     }).start();
   }, [animLoadOpacity, loaded]);
-  var getNextPieceIndex = React.useCallback(function (pieceNumber, direction) {
-    var idx = pieces.indexOf(pieceNumber);
-
-    if (direction === _types.MoveDirection.LEFT) {
-      return idx - 1;
-    } else if (direction === _types.MoveDirection.RIGHT) {
-      return idx + 1;
-    } else if (direction === _types.MoveDirection.TOP) {
-      return idx - piecesPerRow;
-    } else if (direction === _types.MoveDirection.BOTTOM) {
-      return idx + piecesPerRow;
-    }
-
-    return idx;
-  }, [pieces, piecesPerRow]);
   var movePiece = React.useCallback(function (pieceNumber, hidden) {
     var idx = pieces.indexOf(pieceNumber);
     var idxHidden = pieces.indexOf(hidden);
@@ -200,26 +173,8 @@ function PicturePuzzle(_ref) {
 
     nextPieces[idx] = hidden;
     nextPieces[idxHidden] = pieceNumber;
-    typeof onChange === 'function' && onChange(nextPieces, nextPieces[idx]);
-  }, [pieces, onChange, hidden]);
-  var shouldMovePiece = React.useCallback(function (pieceNumber) {
-    var maybeDirections = getMoveDirections(pieceNumber);
-    console.log('maybeDirections: ', maybeDirections);
-
-    if (maybeDirections.length) {
-      var _maybeDirections = _slicedToArray(maybeDirections, 1),
-          direction = _maybeDirections[0];
-
-      var idx = pieces.indexOf(pieceNumber);
-      var nextPieceIndex = getNextPieceIndex(pieceNumber, direction);
-
-      var nextPieces = _toConsumableArray(pieces);
-
-      nextPieces[idx] = nextPieces[nextPieceIndex];
-      nextPieces[nextPieceIndex] = pieceNumber;
-      typeof onChange === 'function' && onChange(nextPieces, nextPieces[idx]);
-    }
-  }, [getMoveDirections, pieces, onChange, hidden, getNextPieceIndex]);
+    typeof onChange === 'function' && onChange(nextPieces, idx);
+  }, [pieces, hidden]);
   var actualSize = pieceSize * piecesPerRow;
   return /*#__PURE__*/React.createElement(_reactNative.Animated.View, {
     style: [_reactNative.StyleSheet.flatten(style), styles.noOverflow, {
