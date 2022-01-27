@@ -199,7 +199,7 @@ function PicturePuzzle(_ref) {
     var nextPieces = _toConsumableArray(pieces);
 
     nextPieces[idx] = hidden;
-    nextPieces[idxHidden] = idx;
+    nextPieces[idxHidden] = pieceNumber;
     typeof onChange === 'function' && onChange(nextPieces, nextPieces[idx]);
   }, [pieces, onChange, hidden]);
   var shouldMovePiece = React.useCallback(function (pieceNumber) {
