@@ -174,6 +174,7 @@ export default function PicturePuzzle({
 
   const shouldMovePiece = React.useCallback((pieceNumber: number) => {
     const maybeDirections = getMoveDirections(pieceNumber);
+    console.log('maybeDirections: ', maybeDirections)
     if (maybeDirections.length) {
       const [direction] = maybeDirections;
       const idx = pieces.indexOf(pieceNumber);
