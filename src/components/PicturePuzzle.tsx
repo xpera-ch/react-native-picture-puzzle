@@ -10,7 +10,7 @@ import {
   View,
   PixelRatio,
   ViewStyle,
- } from 'react-native';
+} from 'react-native';
 
 import ObscureView from './ObscureView';
 import { PuzzlePieces, MoveDirection } from '../types';
@@ -29,11 +29,11 @@ export type PicturePuzzleProps = ImageProps & {
 };
 
 const styles = StyleSheet.create({
-  absolute: {position: 'absolute'},
-  invisible: {opacity: 0},
-  fullWidth: {width: '100%'},
-  noOverflow: {overflow: 'hidden'},
-  row: {flexDirection: 'row'},
+  absolute: { position: 'absolute' },
+  invisible: { opacity: 0 },
+  fullWidth: { width: '100%' },
+  noOverflow: { overflow: 'hidden' },
+  row: { flexDirection: 'row' },
 });
 
 // TODO: add loading indicator :D, make sick as hell
@@ -87,7 +87,7 @@ export default function PicturePuzzle({
     const i = pieces.indexOf(pieceNumber);
     const x = (i % piecesPerRow) * pieceSize;
     const y = Math.floor(i / piecesPerRow) * pieceSize;
-    return {x, y};
+    return { x, y };
   }, [pieces, piecesPerRow]);
 
   const getMoveDirections = React.useCallback((pieceNumber: number): readonly MoveDirection[] => {
@@ -172,6 +172,15 @@ export default function PicturePuzzle({
     return idx;
   }, [pieces, piecesPerRow]);
 
+  const movePiece = React.useCallback((pieceNumber: number, hidden: number) => {
+    const idx = pieces.indexOf(pieceNumber);
+    const idxHidden = pieces.indexOf(hidden);
+    const nextPieces = [...pieces];
+      nextPieces[idx] = hidden;
+      nextPieces[idxHidden] = idx;
+      typeof onChange === 'function' && onChange(nextPieces, nextPieces[idx]);
+  }, [pieces, onChange, hidden])
+
   const shouldMovePiece = React.useCallback((pieceNumber: number) => {
     const maybeDirections = getMoveDirections(pieceNumber);
     console.log('maybeDirections: ', maybeDirections)
@@ -194,13 +203,13 @@ export default function PicturePuzzle({
       style={[
         StyleSheet.flatten(style),
         styles.noOverflow,
-        {width: actualSize, height: actualSize},
+        { width: actualSize, height: actualSize },
       ]}
     >
       <View style={StyleSheet.absoluteFill}>
         <Image
           style={[
-            {width: actualSize, height: actualSize },
+            { width: actualSize, height: actualSize },
             styles.absolute,
             styles.invisible,
           ]}
@@ -208,49 +217,49 @@ export default function PicturePuzzle({
           onLoadStart={onLoadStart}
           onLoad={onLoad}
         />
-        <Animated.View style={[StyleSheet.absoluteFill, {opacity: animLoadOpacity}]}>
+        <Animated.View style={[StyleSheet.absoluteFill, { opacity: animLoadOpacity }]}>
           {typeof renderLoading === 'function' && renderLoading()}
         </Animated.View>
         {[...Array(piecesPerRow)].map((_, i) => (
           <View style={[styles.row, styles.fullWidth]} key={`k${i}`}>
             {[...Array(piecesPerRow)].map((_, j) => {
-                const idx = i * piecesPerRow + j;
-                const opacity = consecutivePieceOpacities[idx];
-                const translate = consecutivePieceTranslations[idx];
-                const top = -i * pieceSize;
-                const bottom = (-i * pieceSize) + pieceSize;
-                const left = -j * pieceSize;
-                const right = (-j * pieceSize) + pieceSize;
-                const pieceNumber = (i * piecesPerRow) + j;
-                return (
-                  <ObscureView
-                    key={`k${j}`}
-                    style={[
-                      styles.absolute,
-                      {
-                        opacity,
-                        transform: [
-                          { scaleX: opacity },
-                          { scaleY: opacity },
-                          { translateX: translate.x },
-                          { translateY: translate.y },
-                        ],
-                      },
-                    ] as ViewStyle}
-                    top={top} 
-                    bottom={bottom}
-                    left={left}
-                    right={right}
-                  >
-                    <TouchableWithoutFeedback onPress={() => shouldMovePiece(pieceNumber)}>
-                      <Image
-                        style={{width: actualSize, height: actualSize}}
-                        source={source}
-                      />
-                    </TouchableWithoutFeedback>
-                  </ObscureView>
-                );
-              }
+              const idx = i * piecesPerRow + j;
+              const opacity = consecutivePieceOpacities[idx];
+              const translate = consecutivePieceTranslations[idx];
+              const top = -i * pieceSize;
+              const bottom = (-i * pieceSize) + pieceSize;
+              const left = -j * pieceSize;
+              const right = (-j * pieceSize) + pieceSize;
+              const pieceNumber = (i * piecesPerRow) + j;
+              return (
+                <ObscureView
+                  key={`k${j}`}
+                  style={[
+                    styles.absolute,
+                    {
+                      opacity,
+                      transform: [
+                        { scaleX: opacity },
+                        { scaleY: opacity },
+                        { translateX: translate.x },
+                        { translateY: translate.y },
+                      ],
+                    },
+                  ] as ViewStyle}
+                  top={top}
+                  bottom={bottom}
+                  left={left}
+                  right={right}
+                >
+                  <TouchableWithoutFeedback onPress={() => movePiece(pieceNumber, hidden? hidden: 0)}>
+                    <Image
+                      style={{ width: actualSize, height: actualSize }}
+                      source={source}
+                    />
+                  </TouchableWithoutFeedback>
+                </ObscureView>
+              );
+            }
             )}
           </View>
         ))}
