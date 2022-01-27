@@ -192,8 +192,19 @@ function PicturePuzzle(_ref) {
 
     return idx;
   }, [pieces, piecesPerRow]);
+  var movePiece = React.useCallback(function (pieceNumber, hidden) {
+    var idx = pieces.indexOf(pieceNumber);
+    var idxHidden = pieces.indexOf(hidden);
+
+    var nextPieces = _toConsumableArray(pieces);
+
+    nextPieces[idx] = hidden;
+    nextPieces[idxHidden] = idx;
+    typeof onChange === 'function' && onChange(nextPieces, nextPieces[idx]);
+  }, [pieces, onChange, hidden]);
   var shouldMovePiece = React.useCallback(function (pieceNumber) {
     var maybeDirections = getMoveDirections(pieceNumber);
+    console.log('maybeDirections: ', maybeDirections);
 
     if (maybeDirections.length) {
       var _maybeDirections = _slicedToArray(maybeDirections, 1),
@@ -262,7 +273,7 @@ function PicturePuzzle(_ref) {
         right: right
       }, /*#__PURE__*/React.createElement(_reactNative.TouchableWithoutFeedback, {
         onPress: function onPress() {
-          return shouldMovePiece(pieceNumber);
+          return movePiece(pieceNumber, hidden ? hidden : 0);
         }
       }, /*#__PURE__*/React.createElement(_reactNative.Image, {
         style: {
