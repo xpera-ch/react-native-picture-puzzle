@@ -177,7 +177,7 @@ export default function PicturePuzzle({
     const idxHidden = pieces.indexOf(hidden);
     const nextPieces = [...pieces];
       nextPieces[idx] = hidden;
-      nextPieces[idxHidden] = idx;
+      nextPieces[idxHidden] = pieceNumber;
       typeof onChange === 'function' && onChange(nextPieces, nextPieces[idx]);
   }, [pieces, onChange, hidden])
 
