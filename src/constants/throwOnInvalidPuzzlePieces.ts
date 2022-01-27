@@ -29,7 +29,8 @@ export default function throwOnInvalidPuzzlePieces(pieces: PuzzlePieces): void {
     const a = sortedPieces[i];
     const b = sortedPieces[i + 1];
     if (b - a !== 1) {
-      throw new Error('[PicturePuzzle]: Puzzle pieces must be consecutive.');
+      const errorMessage = '[PicturePuzzle]: Puzzle pieces must be consecutive. Pieces: ' + sortedPieces;
+      throw new Error(errorMessage);
     }
   }
 }
