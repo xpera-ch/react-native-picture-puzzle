@@ -61,7 +61,8 @@ function throwOnInvalidPuzzlePieces(pieces) {
     var b = sortedPieces[i + 1];
 
     if (b - a !== 1) {
-      throw new Error('[PicturePuzzle]: Puzzle pieces must be consecutive.');
+      var errorMessage = '[PicturePuzzle]: Puzzle pieces must be consecutive. Pieces: ' + sortedPieces;
+      throw new Error(errorMessage);
     }
   }
 }
