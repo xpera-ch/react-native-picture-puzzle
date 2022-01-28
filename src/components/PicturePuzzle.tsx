@@ -174,9 +174,9 @@ export default function PicturePuzzle({
           onLoadStart={onLoadStart}
           onLoad={onLoad}
         />
-        {/* <Animated.View style={[StyleSheet.absoluteFill, { opacity: animLoadOpacity }]}>
+        <Animated.View style={[StyleSheet.absoluteFill, { opacity: animLoadOpacity }]}>
           {typeof renderLoading === 'function' && renderLoading()}
-        </Animated.View> */}
+        </Animated.View>
         {[...Array(piecesPerRow)].map((_, i) => (
           <View style={[styles.row, styles.fullWidth]} key={`k${i}`}>
             {[...Array(piecesPerRow)].map((_, j) => {
