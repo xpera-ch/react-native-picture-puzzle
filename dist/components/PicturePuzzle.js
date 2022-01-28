@@ -191,11 +191,7 @@ function PicturePuzzle(_ref) {
     source: source,
     onLoadStart: onLoadStart,
     onLoad: onLoad
-  }), /*#__PURE__*/React.createElement(_reactNative.Animated.View, {
-    style: [_reactNative.StyleSheet.absoluteFill, {
-      opacity: animLoadOpacity
-    }]
-  }, typeof renderLoading === 'function' && renderLoading()), _toConsumableArray(Array(piecesPerRow)).map(function (_, i) {
+  }), _toConsumableArray(Array(piecesPerRow)).map(function (_, i) {
     return /*#__PURE__*/React.createElement(_reactNative.View, {
       style: [styles.row, styles.fullWidth],
       key: "k".concat(i)
