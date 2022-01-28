@@ -150,7 +150,7 @@ export default function PicturePuzzle({
     const nextPieces = [...pieces];
       nextPieces[idx] = hidden;
       nextPieces[idxHidden] = pieceNumber;
-      typeof onChange === 'function' && onChange(nextPieces, pieceNumber);
+      typeof onChange === 'function' && onChange(nextPieces, nextPieces[idx]);
   }, [pieces, hidden])
 
   const actualSize = pieceSize * piecesPerRow;

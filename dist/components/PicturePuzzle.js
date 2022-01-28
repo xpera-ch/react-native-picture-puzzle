@@ -173,7 +173,7 @@ function PicturePuzzle(_ref) {
 
     nextPieces[idx] = hidden;
     nextPieces[idxHidden] = pieceNumber;
-    typeof onChange === 'function' && onChange(nextPieces, pieceNumber);
+    typeof onChange === 'function' && onChange(nextPieces, nextPieces[idx]);
   }, [pieces, hidden]);
   var actualSize = pieceSize * piecesPerRow;
   return /*#__PURE__*/React.createElement(_reactNative.Animated.View, {
